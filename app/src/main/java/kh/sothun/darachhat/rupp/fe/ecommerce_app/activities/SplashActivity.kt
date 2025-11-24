@@ -1,12 +1,9 @@
-package kh.sothun.darachhat.rupp.fe.ecommerce_app
+package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityMainBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
@@ -21,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
             startActivity(
                 Intent(
                     this@SplashActivity,
-                    MainActivity::class.java
+                    DashboardActivity::class.java
                 )
             )
         }
