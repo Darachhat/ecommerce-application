@@ -2,4 +2,7 @@
     <string name="app_name">Ecommerce-App</string>
     <string name="start">Start</string>
     <string name="find_your_best_n_collection">Find your best\n Collection</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="darachhat">Darachhat</string>
+    <string name="what_are_you_looking_for">What are you looking for?</string>
 </resources>
