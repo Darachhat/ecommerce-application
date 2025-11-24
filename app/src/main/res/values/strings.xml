@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Ecommerce-App</string>
+    <string name="start">Start</string>
+    <string name="find_your_best_n_collection">Find your best\n Collection</string>
 </resources>
