@@ -13,3 +13,48 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# === Android / Gradle Build ===
+/.gradle/
+/build/
+/app/build/
+
+# Local configuration
+local.properties
+
+# Logs
+*.log
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.cache/
+.cxx/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Firebase / Google
+app/google-services.json
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# JVM / Kotlin
+*.class
+*.jar
+*.war
+*.ear
+
+# Generated
+captures/
+output.json
+
+# NDK
+obj/
+
+# Gradle wrappers cache (keep script)
+gradle-app.setting
+
