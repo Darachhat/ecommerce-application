@@ -7,9 +7,7 @@ plugins {
 
 android {
     namespace = "kh.sothun.darachhat.rupp.fe.ecommerce_app"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk =  36
 
     defaultConfig {
         applicationId = "kh.sothun.darachhat.rupp.fe.ecommerce_app"
