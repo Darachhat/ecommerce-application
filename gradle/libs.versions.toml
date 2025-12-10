@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.1"
+agp = "8.6.1"
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -13,7 +13,8 @@ recyclerview = "1.4.0"
 viewpager2 = "1.1.0"
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-ktx = "androidx.core:core-ktx:1.15.0"
+androidx-core = "androidx.core:core:1.15.0"
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
