@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -27,7 +26,7 @@ public class TinyDB {
     private String lastImagePath = "";
 
     public TinyDB(Context appContext) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+        preferences = appContext.getSharedPreferences("TinyDB", Context.MODE_PRIVATE);
     }
 
     /**
@@ -205,8 +204,8 @@ public class TinyDB {
      */
     public ArrayList<Integer> getListInt(String key) {
         String[] myList = TextUtils.split(preferences.getString(key, ""), "‚‗‚");
-        ArrayList<String> arrayToList = new ArrayList<String>(Arrays.asList(myList));
-        ArrayList<Integer> newList = new ArrayList<Integer>();
+        ArrayList<String> arrayToList = new ArrayList<>(Arrays.asList(myList));
+        ArrayList<Integer> newList = new ArrayList<>();
 
         for (String item : arrayToList)
             newList.add(Integer.parseInt(item));
@@ -259,8 +258,8 @@ public class TinyDB {
      */
     public ArrayList<Double> getListDouble(String key) {
         String[] myList = TextUtils.split(preferences.getString(key, ""), "‚‗‚");
-        ArrayList<String> arrayToList = new ArrayList<String>(Arrays.asList(myList));
-        ArrayList<Double> newList = new ArrayList<Double>();
+        ArrayList<String> arrayToList = new ArrayList<>(Arrays.asList(myList));
+        ArrayList<Double> newList = new ArrayList<>();
 
         for (String item : arrayToList)
             newList.add(Double.parseDouble(item));
@@ -276,8 +275,8 @@ public class TinyDB {
      */
     public ArrayList<Long> getListLong(String key) {
         String[] myList = TextUtils.split(preferences.getString(key, ""), "‚‗‚");
-        ArrayList<String> arrayToList = new ArrayList<String>(Arrays.asList(myList));
-        ArrayList<Long> newList = new ArrayList<Long>();
+        ArrayList<String> arrayToList = new ArrayList<>(Arrays.asList(myList));
+        ArrayList<Long> newList = new ArrayList<>();
 
         for (String item : arrayToList)
             newList.add(Long.parseLong(item));
@@ -302,7 +301,7 @@ public class TinyDB {
      * @return ArrayList of String
      */
     public ArrayList<String> getListString(String key) {
-        return new ArrayList<String>(Arrays.asList(TextUtils.split(preferences.getString(key, ""), "‚‗‚")));
+        return new ArrayList<>(Arrays.asList(TextUtils.split(preferences.getString(key, ""), "‚‗‚")));
     }
 
     /**
@@ -323,7 +322,7 @@ public class TinyDB {
      */
     public ArrayList<Boolean> getListBoolean(String key) {
         ArrayList<String> myList = getListString(key);
-        ArrayList<Boolean> newList = new ArrayList<Boolean>();
+        ArrayList<Boolean> newList = new ArrayList<>();
 
         for (String item : myList) {
             if (item.equals("true")) {
@@ -343,7 +342,7 @@ public class TinyDB {
         Gson gson = new Gson();
 
         ArrayList<String> objStrings = getListString(key);
-        ArrayList<ItemModel> playerList = new ArrayList<ItemModel>();
+        ArrayList<ItemModel> playerList = new ArrayList<>();
 
         for (String jObjString : objStrings) {
             ItemModel player = gson.fromJson(jObjString, ItemModel.class);
@@ -380,7 +379,7 @@ public class TinyDB {
      */
     public void putListInt(String key, ArrayList<Integer> intList) {
         checkForNullKey(key);
-        Integer[] myIntList = intList.toArray(new Integer[intList.size()]);
+        Integer[] myIntList = intList.toArray(new Integer[0]);
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myIntList)).apply();
     }
 
@@ -403,7 +402,7 @@ public class TinyDB {
      */
     public void putListLong(String key, ArrayList<Long> longList) {
         checkForNullKey(key);
-        Long[] myLongList = longList.toArray(new Long[longList.size()]);
+        Long[] myLongList = longList.toArray(new Long[0]);
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myLongList)).apply();
     }
 
@@ -437,7 +436,7 @@ public class TinyDB {
      */
     public void putListDouble(String key, ArrayList<Double> doubleList) {
         checkForNullKey(key);
-        Double[] myDoubleList = doubleList.toArray(new Double[doubleList.size()]);
+        Double[] myDoubleList = doubleList.toArray(new Double[0]);
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myDoubleList)).apply();
     }
 
@@ -461,7 +460,7 @@ public class TinyDB {
      */
     public void putListString(String key, ArrayList<String> stringList) {
         checkForNullKey(key);
-        String[] myStringList = stringList.toArray(new String[stringList.size()]);
+        String[] myStringList = stringList.toArray(new String[0]);
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myStringList)).apply();
     }
 
@@ -484,7 +483,7 @@ public class TinyDB {
      */
     public void putListBoolean(String key, ArrayList<Boolean> boolList) {
         checkForNullKey(key);
-        ArrayList<String> newList = new ArrayList<String>();
+        ArrayList<String> newList = new ArrayList<>();
 
         for (Boolean item : boolList) {
             if (item) {
@@ -512,7 +511,7 @@ public class TinyDB {
     public void putListObject(String key, ArrayList<ItemModel> playerList) {
         checkForNullKey(key);
         Gson gson = new Gson();
-        ArrayList<String> objStrings = new ArrayList<String>();
+        ArrayList<String> objStrings = new ArrayList<>();
         for (ItemModel player : playerList) {
             objStrings.add(gson.toJson(player));
         }
