@@ -379,7 +379,7 @@ public class TinyDB {
      */
     public void putListInt(String key, ArrayList<Integer> intList) {
         checkForNullKey(key);
-        Integer[] myIntList = intList.toArray(new Integer[0]);
+        Integer[] myIntList = intList.  toArray(new Integer[0]);
         preferences.edit().putString(key, TextUtils.join("‚‗‚", myIntList)).apply();
     }
 

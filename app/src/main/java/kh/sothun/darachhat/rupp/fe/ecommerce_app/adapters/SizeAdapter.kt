@@ -30,7 +30,6 @@ RecyclerView.Adapter<SizeAdapter.Viewholder>()
     }
 
     override fun onBindViewHolder(holder: SizeAdapter.Viewholder, position: Int){
-        val size = items[position].toColorInt()
         holder.binding.apply {
             sizeText.text = items[position]
 
