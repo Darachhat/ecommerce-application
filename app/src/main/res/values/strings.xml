@@ -6,4 +6,6 @@
     <string name="darachhat">Darachhat</string>
     <string name="what_are_you_looking_for">What are you looking for?</string>
     <string name="recommendation">Recommendation</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="total_price">Total Price</string>
 </resources>

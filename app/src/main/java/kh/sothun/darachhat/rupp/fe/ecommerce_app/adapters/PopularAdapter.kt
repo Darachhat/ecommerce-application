@@ -1,11 +1,13 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import kh.sothun.darachhat.rupp.fe.ecommerce_app.activities.DetailActivity
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ViewholderPopularBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemModel
 
@@ -44,7 +46,10 @@ class PopularAdapter(
                 .into(pic)
 
             root.setOnClickListener {
-                // TODO: handle click
+                val intent = Intent(holder.itemView.context,
+                    DetailActivity::class.java)
+                intent.putExtra("object", item)
+                holder.itemView.context.startActivity(intent)
             }
         }
     }
