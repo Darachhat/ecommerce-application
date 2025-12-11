@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
 
-                    android:orientation="vertical">
+                    android:orientation="verticaapp/src/main/res/layout/activity_detail.xmll">
 
                     <TextView
                         android:id="@+id/textView12"
