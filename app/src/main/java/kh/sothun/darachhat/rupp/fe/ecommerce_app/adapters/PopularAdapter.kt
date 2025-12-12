@@ -6,14 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import kh.sothun.darachhat.rupp.fe.ecommerce_app.activities.DetailActivity
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ViewholderPopularBinding
-import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemModel
+import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemsModel
 
 class PopularAdapter(
-    private val items: MutableList<ItemModel>
+    private val items: MutableList<ItemsModel>
 ) : RecyclerView.Adapter<PopularAdapter.Viewholder>() {
 
-    fun updateData(newData: List<ItemModel>) {
+    fun updateData(newData: List<ItemsModel>) {
         items.clear()
         items.addAll(newData)
         notifyDataSetChanged()
@@ -44,6 +45,12 @@ class PopularAdapter(
                 .into(pic)
 
             root.setOnClickListener {
+                val intent = Intent(
+                    packageContext = holder.itemView.context,
+                    cls = DetailActivity::class.java
+                )
+                intent.putExtra(name="object", value = item)
+                holder.itemView.context.startActivity(intent)
                 // TODO: handle click
             }
         }

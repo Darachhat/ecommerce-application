@@ -1,11 +1,8 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.model
 
-import android.accessibilityservice.GestureDescription
-import android.media.Rating
-import androidx.appcompat.widget.DialogTitle
 import java.io.Serializable
 
-data class ItemModel(
+data class ItemsModel(
     var title: String="",
     var description: String="",
     var picUrl: ArrayList<String> = ArrayList(),
