@@ -1,5 +1,6 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -42,6 +43,13 @@ class DashboardActivity : AppCompatActivity() {
         initBrands()
         initBanners()
         initPopulars()
+        initBottomNavigation()
+    }
+
+    private fun initBottomNavigation() {
+        binding.cartBtn.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
     }
 
     private fun initPopulars() {

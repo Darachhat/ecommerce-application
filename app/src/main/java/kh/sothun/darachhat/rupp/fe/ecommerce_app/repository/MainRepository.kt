@@ -37,8 +37,10 @@ class MainRepository {
                 _brands.value = list
             }
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error - log it or post empty list
+                android.util.Log.e("MainRepository", "Failed to load brands: ${error.message}")
+                _brands.value = mutableListOf()
             }
         })
     }
@@ -56,8 +58,10 @@ class MainRepository {
                 _banners.value = list
             }
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error - log it or post empty list
+                android.util.Log.e("MainRepository", "Failed to load banners: ${error.message}")
+                _banners.value = emptyList()
             }
         })
     }
@@ -75,8 +79,10 @@ class MainRepository {
                 _popular.value = list
             }
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error - log it or post empty list
+                android.util.Log.e("MainRepository", "Failed to load popular items: ${error.message}")
+                _popular.value = mutableListOf()
             }
         })
     }

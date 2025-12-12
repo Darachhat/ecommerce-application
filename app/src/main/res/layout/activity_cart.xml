@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/backBtn"
+                    android:id="@+id/cartBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
@@ -56,7 +56,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/backBtn" />
+                    app:layout_constraintTop_toTopOf="@+id/cartBtn" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

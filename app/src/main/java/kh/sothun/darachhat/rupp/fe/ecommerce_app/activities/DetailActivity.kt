@@ -26,7 +26,12 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         managmentCart = ManagmentCart(this)
-        item = intent.getSerializableExtra("object")!! as ItemModel
+        item = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra("object", ItemModel::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra("object")!! as ItemModel
+        }
 
         setupViews()
         setupSizeList()
@@ -77,6 +82,12 @@ class DetailActivity : AppCompatActivity() {
                 numberItemTxt.text = item.numberInCart.toString()
                 updateTotalPrice()
             }
+        }
+
+        addToCartBtn.setOnClickListener {
+            item.numberInCart = numberItemTxt.text.toString().toInt()
+            managmentCart.insertFood(item)
+            finish()
         }
     }
 

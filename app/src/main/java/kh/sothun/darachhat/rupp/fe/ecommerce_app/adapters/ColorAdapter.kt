@@ -28,7 +28,20 @@ RecyclerView.Adapter<ColorAdapter.Viewholder>()
     }
 
     override fun onBindViewHolder(holder: ColorAdapter.Viewholder, position: Int){
-        val color = items[position].toColorInt()
+        // Ensure the color string has a '#' prefix if it doesn't already
+        val colorString = if (items[position].startsWith("#")) {
+            items[position]
+        } else {
+            "#${items[position]}"
+        }
+        
+        val color = try {
+            colorString.toColorInt()
+        } catch (e: IllegalArgumentException) {
+            // Default to black if color parsing fails
+            android.graphics.Color.BLACK
+        }
+        
         holder.binding.apply {
             colorCircle.setColorFilter(color, PorterDuff.Mode.SRC_IN)
             strokeView.visibility = if (selectedPosition == position)

@@ -45,10 +45,10 @@ RecyclerView.Adapter<SizeAdapter.Viewholder>()
             }
             if (selectedPosition == position){
                 colorLayout.setBackgroundResource(R.drawable.blue_bg)
-                sizeText.setTextColor(holder.itemView.context.resources.getColor(R.color.white))
+                sizeText.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.context, R.color.white))
             } else{
                 colorLayout.setBackgroundResource(R.drawable.stroke_pink_bg)
-                sizeText.setTextColor(holder.itemView.context.resources.getColor(R.color.black))
+                sizeText.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.context, R.color.black))
             }
         }
     }
