@@ -42,7 +42,8 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.4.0")) // Firebase BoM
-    implementation("com.google.firebase:firebase-database-ktx")        // Realtime DB KTX
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("androidx.core:core-ktx:1.15.0")// Realtime DB KTX
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -60,4 +61,4 @@ dependencies {
     implementation("com.tbuonomo:dotsindicator:5.1.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
-}
+};

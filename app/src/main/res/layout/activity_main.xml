@@ -84,7 +84,7 @@
                     android:paddingEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ProgressBar
                     android:id="@+id/progressBarBrands"
@@ -106,7 +106,9 @@
                     android:id="@+id/viewpagerSilder"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
+                    android:layout_marginTop="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,7 +127,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    tools:visibility="visible"
                     app:dotsColor="@color/LightGray"
                     app:dotsCornerRadius="8dp"
                     app:dotsSize="6dp"
@@ -135,7 +136,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewpagerSilder"
-                    app:selectedDotColor="@color/pink" />
+                    app:selectedDotColor="@color/pink"
+                    tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -145,33 +147,30 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/titleTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textStyle="bold"
+                    android:text="@string/recommendation"
                     android:textColor="@color/black"
-                    android:text="@string/recommendation" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/pink"
-                    android:text="See all" />
+                    android:text="See all"
+                    android:textColor="@color/pink" />
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPopular"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewPopular"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ProgressBar
                     android:id="@+id/progressBarPopular"
@@ -205,7 +204,7 @@
             app:srcCompat="@drawable/btn_1" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/backBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"
@@ -213,7 +212,7 @@
             app:srcCompat="@drawable/btn_2" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/favBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"
@@ -221,7 +220,7 @@
             app:srcCompat="@drawable/btn_3" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/picMain"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"
