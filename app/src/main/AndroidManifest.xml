@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceApp">
         <activity
+            android:name=".activities.FavoriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.CartActivity"
             android:exported="false" />
         <activity

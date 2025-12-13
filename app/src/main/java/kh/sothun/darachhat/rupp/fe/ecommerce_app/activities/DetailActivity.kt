@@ -13,12 +13,17 @@ import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.SizeAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityDetailBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ViewholderPopularBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.helpers.ManagmentCart
+import kh.sothun.darachhat.rupp.fe.ecommerce_app.helpers.TinyDB
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemModel
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var item: ItemModel
     private lateinit var managmentCart: ManagmentCart
+    private lateinit var tinyDB: TinyDB
+    private var isFavorite = false
+    private lateinit var colorAdapter: ColorAdapter
+    private lateinit var sizeAdapter: SizeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,6 +31,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         managmentCart = ManagmentCart(this)
+        tinyDB = TinyDB(this)
         item = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra("object", ItemModel::class.java)!!
         } else {
@@ -36,12 +42,13 @@ class DetailActivity : AppCompatActivity() {
         setupViews()
         setupSizeList()
         setupColorList()
-
+        checkFavoriteStatus()
     }
 
     private fun setupColorList() {
         binding.apply {
-            colorList.adapter = ColorAdapter(item.color)
+            colorAdapter = ColorAdapter(item.color)
+            colorList.adapter = colorAdapter
             colorList.layoutManager = LinearLayoutManager(
                 this@DetailActivity,
                 LinearLayoutManager.VERTICAL, false
@@ -51,8 +58,9 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setupSizeList() {
         val sizeList = item.size.map { it }
+        sizeAdapter = SizeAdapter(sizeList as ArrayList<String>)
         binding.sizeList.apply {
-            adapter = SizeAdapter(sizeList as ArrayList<String>)
+            adapter = sizeAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
@@ -85,10 +93,81 @@ class DetailActivity : AppCompatActivity() {
         }
 
         addToCartBtn.setOnClickListener {
-            item.numberInCart = numberItemTxt.text.toString().toInt()
-            managmentCart.insertFood(item)
-            finish()
+            val selectedColor = colorAdapter.getSelectedColor()
+            val selectedSize = sizeAdapter.getSelectedSize()
+            
+            when {
+                selectedColor == null && selectedSize == null -> {
+                    android.widget.Toast.makeText(
+                        this@DetailActivity,
+                        "Please select color and size",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+                selectedColor == null -> {
+                    android.widget.Toast.makeText(
+                        this@DetailActivity,
+                        "Please select a color",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+                selectedSize == null -> {
+                    android.widget.Toast.makeText(
+                        this@DetailActivity,
+                        "Please select a size",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                    item.numberInCart = numberItemTxt.text.toString().toInt()
+                    managmentCart.insertFood(item)
+                    android.widget.Toast.makeText(
+                        this@DetailActivity,
+                        "Added to cart",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                }
+            }
         }
+
+        addToFavoriteBtn.setOnClickListener {
+            toggleFavorite()
+        }
+    }
+
+    private fun checkFavoriteStatus() {
+        val favoriteList = getFavoriteList()
+        isFavorite = favoriteList.any { it.title == item.title }
+        updateFavoriteIcon()
+    }
+
+    private fun toggleFavorite() {
+        val favoriteList = getFavoriteList()
+        
+        if (isFavorite) {
+            // Remove from favorites
+            favoriteList.removeAll { it.title == item.title }
+            android.widget.Toast.makeText(this, "Removed from favorites", android.widget.Toast.LENGTH_SHORT).show()
+        } else {
+            // Add to favorites
+            favoriteList.add(item)
+            android.widget.Toast.makeText(this, "Added to favorites", android.widget.Toast.LENGTH_SHORT).show()
+        }
+        
+        tinyDB.putListObject("FavoriteList", favoriteList)
+        isFavorite = !isFavorite
+        updateFavoriteIcon()
+    }
+
+    private fun updateFavoriteIcon() {
+        binding.addToFavoriteBtn.setImageResource(
+            if (isFavorite) R.drawable.btn_3 else R.drawable.fav_icon
+        )
+    }
+
+    private fun getFavoriteList(): ArrayList<ItemModel> {
+        return tinyDB.getListObject("FavoriteList") ?: arrayListOf()
     }
 
     private fun updateTotalPrice()= with(binding) {

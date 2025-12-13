@@ -196,7 +196,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/mainBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"
@@ -212,7 +212,7 @@
             app:srcCompat="@drawable/btn_2" />
 
         <ImageView
-            android:id="@+id/favBtn"
+            android:id="@+id/favoriteBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"
@@ -220,7 +220,7 @@
             app:srcCompat="@drawable/btn_3" />
 
         <ImageView
-            android:id="@+id/picMain"
+            android:id="@+id/profileBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="8dp"

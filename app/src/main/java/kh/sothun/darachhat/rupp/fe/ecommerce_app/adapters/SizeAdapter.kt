@@ -54,4 +54,8 @@ RecyclerView.Adapter<SizeAdapter.Viewholder>()
     }
 
     override fun getItemCount(): Int = items.size
+    
+    fun getSelectedSize(): String? {
+        return if (selectedPosition != -1) items[selectedPosition] else null
+    }
 }

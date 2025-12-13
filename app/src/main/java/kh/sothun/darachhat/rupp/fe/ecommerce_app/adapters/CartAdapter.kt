@@ -52,7 +52,7 @@ RecyclerView.Adapter<CartAdapter.Viewholder>()
             }
 
             minusCartBtn.setOnClickListener {
-                managementCart.plusItem(listItemSelected,position,object : ChangeNumberItemsListener{
+                managementCart.minusItem(listItemSelected,position,object : ChangeNumberItemsListener{
                     override fun onChanged() {
                         notifyDataSetChanged()
                         changeNumberItemsListener?.onChanged()

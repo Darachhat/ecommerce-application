@@ -44,11 +44,72 @@ class DashboardActivity : AppCompatActivity() {
         initBanners()
         initPopulars()
         initBottomNavigation()
+        initSearchAndOtherElements()
+    }
+
+    private fun initSearchAndOtherElements() {
+        binding.apply {
+            // Search functionality
+            editTextText.setOnEditorActionListener { v, actionId, event ->
+                val query = v.text.toString()
+                if (query.isNotEmpty()) {
+                    android.widget.Toast.makeText(
+                        this@DashboardActivity,
+                        "Searching for: $query",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    // You can implement actual search functionality here
+                }
+                false
+            }
+
+            // Bell icon notification
+            imageView2.setOnClickListener {
+                android.widget.Toast.makeText(
+                    this@DashboardActivity,
+                    "No new notifications",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            // "See all" text click
+            textView5.setOnClickListener {
+                android.widget.Toast.makeText(
+                    this@DashboardActivity,
+                    "Showing all items",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                // You can navigate to a full list view here
+            }
+        }
     }
 
     private fun initBottomNavigation() {
-        binding.cartBtn.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
+        binding.apply {
+            // Main/Home button - refresh or scroll to top
+            mainBtn.setOnClickListener {
+                binding.recyclerViewPopular.smoothScrollToPosition(0)
+                binding.recyclerViewBrands.smoothScrollToPosition(0)
+            }
+
+            // Cart button
+            cartBtn.setOnClickListener {
+                startActivity(Intent(this@DashboardActivity, CartActivity::class.java))
+            }
+
+            // Favorite button
+            favoriteBtn.setOnClickListener {
+                startActivity(Intent(this@DashboardActivity, FavoriteActivity::class.java))
+            }
+
+            // Profile button - show toast for now (can be implemented later)
+            profileBtn.setOnClickListener {
+                android.widget.Toast.makeText(
+                    this@DashboardActivity,
+                    "Profile - Coming Soon!",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

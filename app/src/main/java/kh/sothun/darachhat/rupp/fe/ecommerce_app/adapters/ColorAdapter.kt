@@ -61,4 +61,8 @@ RecyclerView.Adapter<ColorAdapter.Viewholder>()
     }
 
     override fun getItemCount(): Int = items.size
+    
+    fun getSelectedColor(): String? {
+        return if (selectedPosition != -1) items[selectedPosition] else null
+    }
 }
