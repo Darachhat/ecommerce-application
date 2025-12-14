@@ -1,6 +1,17 @@
+# === Android / Gradle Build ===
 *.iml
-.gradle
-/local.properties
+.gradle/
+.idea/
+build/
+/app/build/
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# === Android Studio ===
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -8,53 +19,26 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+output.json
 
-# === Android / Gradle Build ===
-/.gradle/
-/build/
-/app/build/
-
-# Local configuration
-local.properties
-
-# Logs
-*.log
-
-# Android Studio / IntelliJ
-.idea/
-*.iml
-.cache/
-.cxx/
-
-# Keystore files
+# === Keystore & Security ===
 *.jks
 *.keystore
 
-# Firebase / Google
+# === Firebase / Google Services ===
 app/google-services.json
 
-# OS junk
-.DS_Store
+# === Logs ===
+*.log
+
+# === OS Files ===
 Thumbs.db
 
-# JVM / Kotlin
-*.class
-*.jar
-*.war
-*.ear
-
-# Generated
-captures/
-output.json
-
-# NDK
+# === Generated ===
 obj/
-
-# Gradle wrappers cache (keep script)
 gradle-app.setting
+
 

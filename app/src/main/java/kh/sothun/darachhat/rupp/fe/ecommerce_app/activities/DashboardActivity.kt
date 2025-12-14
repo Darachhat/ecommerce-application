@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +27,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var auth: FirebaseAuth
 
     private val brandsAdapter = BrandsAdapter(mutableListOf())
     private val popularAdapter = PopularAdapter(mutableListOf())
@@ -36,6 +38,8 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth = FirebaseAuth.getInstance()
+        checkAuthenticationState()
         initUI()
     }
 
@@ -45,6 +49,27 @@ class DashboardActivity : AppCompatActivity() {
         initPopulars()
         initBottomNavigation()
         initSearchAndOtherElements()
+    }
+
+    private fun checkAuthenticationState() {
+        val currentUser = auth.currentUser
+        binding.apply {
+            if (currentUser != null) {
+                // User is logged in
+                welcomeSection.visibility = View.VISIBLE
+                loginSection.visibility = View.GONE
+                textView3.text = currentUser.displayName ?: "User"
+            } else {
+                // User is not logged in
+                welcomeSection.visibility = View.GONE
+                loginSection.visibility = View.VISIBLE
+                
+                // Handle login button click
+                loginBtn.setOnClickListener {
+                    startActivity(Intent(this@DashboardActivity, LoginActivity::class.java))
+                }
+            }
+        }
     }
 
     private fun initSearchAndOtherElements() {
@@ -102,13 +127,9 @@ class DashboardActivity : AppCompatActivity() {
                 startActivity(Intent(this@DashboardActivity, FavoriteActivity::class.java))
             }
 
-            // Profile button - show toast for now (can be implemented later)
+            // Profile button
             profileBtn.setOnClickListener {
-                android.widget.Toast.makeText(
-                    this@DashboardActivity,
-                    "Profile - Coming Soon!",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
+                startActivity(Intent(this@DashboardActivity, ProfileActivity::class.java))
             }
         }
     }

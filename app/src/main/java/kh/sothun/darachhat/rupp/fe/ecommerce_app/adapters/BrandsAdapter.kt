@@ -37,8 +37,11 @@ class BrandsAdapter(private val items: MutableList<BrandModel>) :
     override fun onBindViewHolder(holder: BrandsAdapter.Viewholder, position: Int) {
         val item = items[position]
 
+        // Load image without tint first
         Glide.with(holder.itemView.context)
-            .load(item.picUrl).into(holder.binding.pic)
+            .load(item.picUrl)
+            .centerInside()
+            .into(holder.binding.pic)
 
         holder.binding.root.setOnClickListener {
             lastSelectedPosition = selectedPosition
@@ -57,14 +60,15 @@ class BrandsAdapter(private val items: MutableList<BrandModel>) :
             }
         )
 
-        ImageViewCompat.setImageTintList(
-            holder.binding.pic,
-            ColorStateList.valueOf(
-                holder.itemView.context.getColor(
-                    if(isSelected) R.color.white else R.color.black
-                )
+        // Only apply tint if selected, otherwise clear it
+        if (isSelected) {
+            ImageViewCompat.setImageTintList(
+                holder.binding.pic,
+                ColorStateList.valueOf(holder.itemView.context.getColor(R.color.white))
             )
-        )
+        } else {
+            ImageViewCompat.setImageTintList(holder.binding.pic, null)
+        }
     }
 
     override fun getItemCount(): Int = items.size
