@@ -191,22 +191,45 @@ class MainRepository {
                 for (child in snapshot.children){
                     val id = child.key ?: ""
                     val title = child.child("title").getValue(String::class.java) ?: ""
+                    val description = child.child("description").getValue(String::class.java) ?: ""
                     val price = child.child("price").getValue(Double::class.java) ?: 0.0
+                    val oldPrice = child.child("oldPrice").getValue(Double::class.java) ?: 0.0
                     val thumbnail = child.child("thumbnail").getValue(String::class.java) ?: ""
                     val categoryId = child.child("categoryId").getValue(String::class.java) ?: ""
                     val brandId = child.child("brandId").getValue(String::class.java) ?: ""
                     val active = child.child("active").getValue(Boolean::class.java) ?: true
                     val rating = child.child("rating").getValue(Double::class.java) ?: 0.0
                     
+                    // Read picUrl array
+                    val picUrlList = arrayListOf<String>()
+                    child.child("picUrl").children.forEach { picChild ->
+                        picChild.getValue(String::class.java)?.let { picUrlList.add(it) }
+                    }
+                    if (picUrlList.isEmpty() && thumbnail.isNotEmpty()) {
+                        picUrlList.add(thumbnail)
+                    }
+                    
+                    // Read size array
+                    val sizeList = arrayListOf<String>()
+                    child.child("size").children.forEach { sizeChild ->
+                        sizeChild.getValue(String::class.java)?.let { sizeList.add(it) }
+                    }
+                    
+                    // Read color array
+                    val colorList = arrayListOf<String>()
+                    child.child("color").children.forEach { colorChild ->
+                        colorChild.getValue(String::class.java)?.let { colorList.add(it) }
+                    }
+                    
                     if (active && title.isNotEmpty()) {
                         list.add(ItemModel(
                             title = title,
-                            description = "",
-                            picUrl = arrayListOf(thumbnail),
-                            size = arrayListOf(),
-                            color = arrayListOf(),
+                            description = description,
+                            picUrl = picUrlList,
+                            size = sizeList,
+                            color = colorList,
                             price = price,
-                            oldPrice = 0.0,
+                            oldPrice = oldPrice,
                             rating = rating,
                             numberInCart = 1
                         ))
