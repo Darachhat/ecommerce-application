@@ -1,5 +1,6 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +19,9 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var managemendCart: ManagmentCart
     private var tax: Double=0.0
+    private var delivery: Double=10.0
+    private var subtotal: Double=0.0
+    private var total: Double=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -57,17 +61,29 @@ class CartActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.cartBtn.setOnClickListener { finish() }
+        
+        binding.button.setOnClickListener {
+            if (managemendCart.getListCart().isNotEmpty()) {
+                val intent = Intent(this, PaymentActivity::class.java).apply {
+                    putExtra("subtotal", subtotal)
+                    putExtra("tax", tax)
+                    putExtra("delivery", delivery)
+                    putExtra("total", total)
+                }
+                startActivity(intent)
+            }
+        }
     }
 
     private fun calculatorCart(){
         val percentTax=0.02
-        val delivery=10.0
+        delivery=10.0
         tax = Math.round((managemendCart.getTotalFee()*percentTax)*100)/100.0
-        val total = Math.round((managemendCart.getTotalFee() + tax + delivery)*100)/100.0
-        val itemTotal = Math.round(managemendCart.getTotalFee() * 100)/100.0
+        total = Math.round((managemendCart.getTotalFee() + tax + delivery)*100)/100.0
+        subtotal = Math.round(managemendCart.getTotalFee() * 100)/100.0
 
         binding.apply {
-            totalFeeTxt.text = "$$itemTotal"
+            totalFeeTxt.text = "$$subtotal"
             taxTxt.text= "$$tax"
             deliveryTxt.text = "$$delivery"
             totalFeeTxt.text = "$$total"

@@ -44,6 +44,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.4.0")) // Firebase BoM
     implementation("com.google.firebase:firebase-database-ktx") // Realtime DB KTX
     implementation("com.google.firebase:firebase-auth-ktx") // Firebase Auth
+    implementation("com.google.firebase:firebase-appcheck-debug") // App Check Debug
     implementation("androidx.core:core-ktx:1.15.0")
 
     implementation(libs.androidx.core.ktx)

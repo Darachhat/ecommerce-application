@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/imageSlide"
     android:minHeight="150dp"
-    android:scaleType="fitCenter"
+    android:scaleType="centerCrop"
     android:layout_height="match_parent"
     app:shapeAppearanceOverlay="@style/roundImage">
 

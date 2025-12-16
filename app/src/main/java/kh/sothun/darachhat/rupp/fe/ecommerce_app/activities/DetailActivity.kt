@@ -170,7 +170,7 @@ class DetailActivity : AppCompatActivity() {
         return tinyDB.getListObject("FavoriteList") ?: arrayListOf()
     }
 
-    private fun updateTotalPrice()= with(binding) {
-        totalPriceTxt.text = "$${item.price * item.numberInCart}"
+    private fun updateTotalPrice() {
+        binding.totalPriceTxt.text = "$${String.format("%.2f", item.price * item.numberInCart)}"
     }
 }

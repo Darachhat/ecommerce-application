@@ -1,5 +1,6 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.util.Log
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -102,26 +103,36 @@ class LoginActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             loginButton.isEnabled = false
 
+            Log.d("LoginActivity", "Starting signInWithEmailAndPassword for $email")
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this@LoginActivity) { task ->
+                    Log.d("LoginActivity", "signInWithEmailAndPassword complete. Success: ${task.isSuccessful}")
                     progressBar.visibility = View.GONE
                     loginButton.isEnabled = true
 
                     if (task.isSuccessful) {
+                        Log.d("LoginActivity", "Login successful, navigating to Dashboard")
                         Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
                         
                         // Navigate to dashboard
-                        startActivity(Intent(this@LoginActivity, DashboardActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        })
+                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
                         finish()
                     } else {
+                        Log.e("LoginActivity", "Login failed", task.exception)
                         Toast.makeText(
                             this@LoginActivity,
                             "Login failed: ${task.exception?.message}",
                             Toast.LENGTH_LONG
                         ).show()
                     }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("LoginActivity", "signInWithEmailAndPassword failed explicitly", e)
+                }
+                .addOnCanceledListener {
+                    Log.w("LoginActivity", "signInWithEmailAndPassword was canceled")
                 }
         }
     }
