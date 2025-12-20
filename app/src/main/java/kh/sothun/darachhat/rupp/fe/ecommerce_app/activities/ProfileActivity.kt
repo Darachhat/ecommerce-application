@@ -66,7 +66,17 @@ class ProfileActivity : AppCompatActivity() {
 
             // Change Password
             changePasswordCard.setOnClickListener {
-                showToast("Change Password - Coming Soon!")
+                val currentUser = auth.currentUser
+                if (currentUser == null) {
+                    android.widget.Toast.makeText(
+                        this@ProfileActivity,
+                        "Please login to change password",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                    startActivity(Intent(this@ProfileActivity, LoginActivity::class.java))
+                } else {
+                    startActivity(Intent(this@ProfileActivity, ChangePasswordActivity::class.java))
+                }
             }
 
             // Orders

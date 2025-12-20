@@ -57,6 +57,9 @@
         <activity
             android:name=".activities.ProductsActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
