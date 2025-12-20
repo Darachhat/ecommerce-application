@@ -14,5 +14,7 @@ data class ItemModel(
     var price: Double=0.0,
     var oldPrice: Double=0.0,
     var rating: Double=0.0,
-    var numberInCart: Int=1
+    var numberInCart: Int=1,
+    var brandId: String = "",
+    var categoryId: String = ""
 ) : Serializable

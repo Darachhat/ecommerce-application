@@ -10,7 +10,7 @@ import kh.sothun.darachhat.rupp.fe.ecommerce_app.R
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ViewholderBrandBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.BrandModel
 
-class BrandsAdapter(private val items: MutableList<BrandModel>) :
+class BrandsAdapter(private val items: MutableList<BrandModel>, private val onBrandSelected: ((BrandModel) -> Unit)? = null) :
     RecyclerView.Adapter<BrandsAdapter.Viewholder>() {
         private var selectedPosition = -1
         private var lastSelectedPosition = -1
@@ -48,6 +48,7 @@ class BrandsAdapter(private val items: MutableList<BrandModel>) :
             selectedPosition = position
             if(lastSelectedPosition != -1) notifyItemChanged(lastSelectedPosition)
             notifyItemChanged(selectedPosition)
+            onBrandSelected?.invoke(item)
         }
 
         val isSelected = selectedPosition == position

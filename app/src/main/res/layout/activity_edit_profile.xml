@@ -12,7 +12,9 @@
         android:id="@+id/headerGradient"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/gradient_bg_10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +25,12 @@
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:contentDescription="Back"
         android:src="@drawable/back"
-        app:layout_constraintTop_toTopOf="@+id/headerGradient"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/headerGradient" />
 
     <!-- Title -->
     <TextView
@@ -80,17 +83,6 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Change Photo Button -->
-            <TextView
-                android:id="@+id/changePhotoBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="32dp"
-                android:text="Change Photo"
-                android:textColor="@color/pink"
-                android:textSize="14sp"
-                android:textStyle="bold" />
 
             <!-- Full Name -->
             <TextView

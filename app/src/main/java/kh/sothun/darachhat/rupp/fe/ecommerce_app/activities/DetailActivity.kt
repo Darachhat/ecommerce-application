@@ -1,5 +1,6 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.R
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.ColorAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.SizeAdapter
@@ -21,6 +23,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var item: ItemModel
     private lateinit var managmentCart: ManagmentCart
     private lateinit var tinyDB: TinyDB
+    private lateinit var auth: FirebaseAuth
     private var isFavorite = false
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var sizeAdapter: SizeAdapter
@@ -32,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
 
         managmentCart = ManagmentCart(this)
         tinyDB = TinyDB(this)
+        auth = FirebaseAuth.getInstance()
         item = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra("object", ItemModel::class.java)!!
         } else {
@@ -93,6 +97,18 @@ class DetailActivity : AppCompatActivity() {
         }
 
         addToCartBtn.setOnClickListener {
+            // Check if user is logged in
+            if (auth.currentUser == null) {
+                android.widget.Toast.makeText(
+                    this@DetailActivity,
+                    "Please login to add items to cart",
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
+                // Navigate to login
+                startActivity(Intent(this@DetailActivity, LoginActivity::class.java))
+                return@setOnClickListener
+            }
+            
             val selectedColor = colorAdapter.getSelectedColor()
             val selectedSize = sizeAdapter.getSelectedSize()
             
@@ -132,6 +148,17 @@ class DetailActivity : AppCompatActivity() {
         }
 
         addToFavoriteBtn.setOnClickListener {
+            // Check if user is logged in
+            if (auth.currentUser == null) {
+                android.widget.Toast.makeText(
+                    this@DetailActivity,
+                    "Please login to add items to favorites",
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
+                // Navigate to login
+                startActivity(Intent(this@DetailActivity, LoginActivity::class.java))
+                return@setOnClickListener
+            }
             toggleFavorite()
         }
     }

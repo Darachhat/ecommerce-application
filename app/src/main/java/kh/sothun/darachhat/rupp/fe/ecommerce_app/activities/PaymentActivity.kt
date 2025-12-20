@@ -1,9 +1,12 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.R
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityPaymentBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.helpers.ManagmentCart
@@ -11,6 +14,7 @@ import kh.sothun.darachhat.rupp.fe.ecommerce_app.helpers.ManagmentCart
 class PaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPaymentBinding
     private lateinit var managmentCart: ManagmentCart
+    private lateinit var auth: FirebaseAuth
     private var subtotal: Double = 0.0
     private var tax: Double = 0.0
     private var delivery: Double = 0.0
@@ -23,6 +27,19 @@ class PaymentActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         managmentCart = ManagmentCart(this)
+        auth = FirebaseAuth.getInstance()
+        
+        // Check if user is logged in, if not redirect to login
+        if (auth.currentUser == null) {
+            Toast.makeText(
+                this,
+                "Please login to complete your order",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
         
         // Get order summary from intent
         subtotal = intent.getDoubleExtra("subtotal", 0.0)
@@ -155,20 +172,82 @@ class PaymentActivity : AppCompatActivity() {
                 else -> "Unknown"
             }
 
-            // Here you would normally process the payment and save order to Firebase
-            // For now, just show success message and clear cart
-            
-            Toast.makeText(
-                this@PaymentActivity,
-                "Order placed successfully!\nDelivering to: $address, $city",
-                Toast.LENGTH_LONG
-            ).show()
-
-            // Clear the cart
-            managmentCart.clearCart()
-
-            // Return to main activity
-            finishAffinity()
+            // Save order to Firebase Database
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                val orderId = FirebaseDatabase.getInstance().getReference("orders").push().key ?: return@apply
+                
+                // Prepare cart items for order
+                val cartItems = managmentCart.getListCart()
+                val orderItems = cartItems.map { item ->
+                    hashMapOf(
+                        "productId" to "",  // Product ID not stored in cart
+                        "title" to item.title,
+                        "price" to item.price,
+                        "quantity" to item.numberInCart,
+                        "size" to if (item.size.isNotEmpty()) item.size[0] else "",
+                        "color" to if (item.color.isNotEmpty()) item.color[0] else "",
+                        "thumbnail" to (item.picUrl.firstOrNull() ?: "")
+                    )
+                }
+                
+                // Prepare order data matching AdminApp structure
+                val orderData = hashMapOf(
+                    "userId" to currentUser.uid,
+                    "userEmail" to (currentUser.email ?: ""),
+                    "orderDate" to System.currentTimeMillis(),
+                    "status" to "pending",
+                    "deliveryInfo" to hashMapOf(
+                        "fullName" to fullName,
+                        "phone" to phone,
+                        "address" to address,
+                        "city" to city,
+                        "postalCode" to postalCode
+                    ),
+                    "paymentMethod" to paymentMethod,
+                    "items" to orderItems,
+                    "pricing" to hashMapOf(
+                        "subtotal" to subtotal,
+                        "tax" to tax,
+                        "delivery" to delivery,
+                        "total" to total
+                    )
+                )
+                
+                // Save to Firebase
+                FirebaseDatabase.getInstance().getReference("orders")
+                    .child(orderId)
+                    .setValue(orderData)
+                    .addOnSuccessListener {
+                        Toast.makeText(
+                            this@PaymentActivity,
+                            "Order placed successfully!\nDelivering to: $address, $city",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        
+                        // Clear the cart
+                        managmentCart.clearCart()
+                        
+                        // Navigate to dashboard with cleared back stack
+                        val intent = Intent(this@PaymentActivity, DashboardActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            this@PaymentActivity,
+                            "Failed to place order: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+            } else {
+                Toast.makeText(
+                    this@PaymentActivity,
+                    "Please login to place an order",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }

@@ -13,4 +13,15 @@
     <string name="check_out">Check Out</string>
     <string name="delivery">Delivery</string>
     <string name="total">Total</string>
+    <string name="my_orders">My Orders</string>
+    <string name="no_orders_yet">No Orders Yet</string>
+    <string name="empty_orders_hint">Start shopping and place your first order!</string>
+    <string name="browse_products">Browse Products</string>
+    <string name="view_details">View Details</string>
+    <string name="order_details">Order Details</string>
+    <string name="order_information">Order Information</string>
+    <string name="delivery_information">Delivery Information</string>
+    <string name="order_items">Order Items</string>
+    <string name="pricing_summary">Pricing Summary</string>
+    <string name="close">Close</string>
 </resources>

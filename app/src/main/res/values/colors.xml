@@ -4,8 +4,19 @@
     <color name="white">#FFFFFFFF</color>
     <color name="LightGray">#ededed</color>
     <color name="gray">#919191</color>
+    <color name="grey">#919191</color>
     <color name="darkGray">#616161</color>
     <color name="pink">#FFD700</color>
     <color name="blue">#50a2dd</color>
+    <color name="purple">#FFD700</color>
+    <color name="purpleLight">#F3E5F5</color>
+    <color name="blueLight">#E3F2FD</color>
+    <color name="greyLight">#F5F5F5</color>
+    <color name="amber">#FFA726</color>
+    <color name="amberLight">#FFF3E0</color>
+    <color name="green">#66BB6A</color>
+    <color name="greenLight">#E8F5E9</color>
+    <color name="red">#EF5350</color>
+    <color name="redLight">#FFEBEE</color>
 
 </resources>

@@ -1,11 +1,13 @@
 package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.FavoriteAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityFavoriteBinding
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.helpers.TinyDB
@@ -14,6 +16,7 @@ import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemModel
 class FavoriteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavoriteBinding
     private lateinit var tinyDB: TinyDB
+    private lateinit var auth: FirebaseAuth
     private lateinit var favoriteAdapter: FavoriteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +26,19 @@ class FavoriteActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         tinyDB = TinyDB(this)
+        auth = FirebaseAuth.getInstance()
+        
+        // Check if user is logged in, if not redirect to login
+        if (auth.currentUser == null) {
+            Toast.makeText(
+                this,
+                "Please login to view your favorites",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
         
         initializeAdapter()
         setupViews()

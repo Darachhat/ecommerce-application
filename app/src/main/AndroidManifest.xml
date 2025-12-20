@@ -34,6 +34,9 @@
             android:name=".activities.PaymentActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.MyOrdersActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.CartActivity"
             android:exported="false" />
         <activity

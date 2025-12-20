@@ -66,10 +66,7 @@ class EditProfileActivity : AppCompatActivity() {
                 finish()
             }
 
-            // Change photo button
-            changePhotoBtn.setOnClickListener {
-                Toast.makeText(this@EditProfileActivity, "Photo upload coming soon", Toast.LENGTH_SHORT).show()
-            }
+
 
             // Save button
             saveButton.setOnClickListener {

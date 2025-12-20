@@ -71,7 +71,17 @@ class ProfileActivity : AppCompatActivity() {
 
             // Orders
             ordersCard.setOnClickListener {
-                showToast("My Orders - Coming Soon!")
+                val currentUser = auth.currentUser
+                if (currentUser == null) {
+                    Toast.makeText(
+                        this@ProfileActivity,
+                        "Please login to view your orders",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    startActivity(Intent(this@ProfileActivity, LoginActivity::class.java))
+                } else {
+                    startActivity(Intent(this@ProfileActivity, MyOrdersActivity::class.java))
+                }
             }
 
             // Logout or Login

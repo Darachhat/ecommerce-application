@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.FirebaseDatabase
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
@@ -130,22 +131,46 @@ class RegisterActivity : AppCompatActivity() {
 
                         user?.updateProfile(profileUpdates)
                             ?.addOnCompleteListener { profileTask ->
-                                progressBar.visibility = View.GONE
-                                registerButton.isEnabled = true
-
                                 if (profileTask.isSuccessful) {
-                                    Toast.makeText(
-                                        this@RegisterActivity,
-                                        "Registration successful! Welcome, $name",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-
-                                    // Navigate to dashboard
-                                    startActivity(Intent(this@RegisterActivity, DashboardActivity::class.java).apply {
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    })
-                                    finish()
+                                    // Save user data to Realtime Database
+                                    val userId = user.uid
+                                    val userMap = hashMapOf(
+                                        "email" to email,
+                                        "role" to "user",
+                                        "createdAt" to (System.currentTimeMillis() / 1000)
+                                    )
+                                    
+                                    FirebaseDatabase.getInstance().getReference("users")
+                                        .child(userId)
+                                        .setValue(userMap)
+                                        .addOnCompleteListener { databaseTask ->
+                                            progressBar.visibility = View.GONE
+                                            registerButton.isEnabled = true
+                                            
+                                            if (databaseTask.isSuccessful) {
+                                                Toast.makeText(
+                                                    this@RegisterActivity,
+                                                    "Registration successful! Welcome, $name",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            } else {
+                                                Toast.makeText(
+                                                    this@RegisterActivity,
+                                                    "Account created but profile setup incomplete",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                            
+                                            // Navigate to dashboard
+                                            startActivity(Intent(this@RegisterActivity, DashboardActivity::class.java).apply {
+                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            })
+                                            finish()
+                                        }
                                 } else {
+                                    progressBar.visibility = View.GONE
+                                    registerButton.isEnabled = true
+                                    
                                     Toast.makeText(
                                         this@RegisterActivity,
                                         "Profile update failed, but account created",
