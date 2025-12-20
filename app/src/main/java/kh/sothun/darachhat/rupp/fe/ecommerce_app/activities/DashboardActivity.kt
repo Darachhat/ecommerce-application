@@ -103,14 +103,6 @@ class DashboardActivity : AppCompatActivity() {
                 }
             }
 
-            // Bell icon notification
-            imageView2.setOnClickListener {
-                android.widget.Toast.makeText(
-                    this@DashboardActivity,
-                    "No new notifications",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }
 
             // "See all" text click
             textView5.setOnClickListener {
