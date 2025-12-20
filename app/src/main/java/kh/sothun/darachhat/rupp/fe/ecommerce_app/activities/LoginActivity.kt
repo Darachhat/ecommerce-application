@@ -103,56 +103,78 @@ class LoginActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             loginButton.isEnabled = false
 
-            Log.d("LoginActivity", "Starting signInWithEmailAndPassword for $email")
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this@LoginActivity) { task ->
-                    Log.d("LoginActivity", "signInWithEmailAndPassword complete. Success: ${task.isSuccessful}")
-                    progressBar.visibility = View.GONE
-                    loginButton.isEnabled = true
-
-                    if (task.isSuccessful) {
-                        Log.d("LoginActivity", "Login successful, navigating to Dashboard")
-                        Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
-                        
-                        // Navigate to dashboard
-                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Log.e("LoginActivity", "Login failed", task.exception)
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Login failed: ${task.exception?.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+            auth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener { checkTask ->
+                    val methods = if (checkTask.isSuccessful) {
+                        checkTask.result?.signInMethods ?: emptyList()
+                    } else emptyList()
+                    if (methods.isEmpty()) {
+                        // Advisory only; still try sign-in in case of transient issues or newly created accounts
+                        Toast.makeText(this@LoginActivity, "Checking account...", Toast.LENGTH_SHORT).show()
+                    } else if (!methods.contains("password")) {
+                        Toast.makeText(this@LoginActivity, "Account may use a different sign-in method", Toast.LENGTH_SHORT).show()
                     }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("LoginActivity", "signInWithEmailAndPassword failed explicitly", e)
-                }
-                .addOnCanceledListener {
-                    Log.w("LoginActivity", "signInWithEmailAndPassword was canceled")
+
+                    Log.d("LoginActivity", "Starting signInWithEmailAndPassword for $email")
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this@LoginActivity) { task ->
+                            Log.d("LoginActivity", "signIn complete: ${task.isSuccessful}")
+                            progressBar.visibility = View.GONE
+                            loginButton.isEnabled = true
+
+                            if (task.isSuccessful) {
+                                Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                val friendly = mapAuthError(task.exception)
+                                Toast.makeText(this@LoginActivity, friendly, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            progressBar.visibility = View.GONE
+                            loginButton.isEnabled = true
+                            val friendly = mapAuthError(e)
+                            Toast.makeText(this@LoginActivity, friendly, Toast.LENGTH_LONG).show()
+                        }
+                        .addOnCanceledListener {
+                            progressBar.visibility = View.GONE
+                            loginButton.isEnabled = true
+                            Toast.makeText(this@LoginActivity, "Login canceled", Toast.LENGTH_LONG).show()
+                        }
                 }
         }
     }
 
+    private fun mapAuthError(e: Exception?): String {
+        val msg = e?.message ?: "Authentication error"
+        return when {
+            msg.contains("password is invalid", ignoreCase = true) -> "Incorrect password"
+            msg.contains("no user record", ignoreCase = true) -> "No account found for this email"
+            msg.contains("malformed", ignoreCase = true) -> "Invalid credentials. Please re-enter your email and password"
+            else -> "Login failed: $msg"
+        }
+    }
+
     private fun resetPassword(email: String) {
-        auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Password reset email sent to $email",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Failed to send reset email: ${task.exception?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { t ->
+                val methods = t.result?.signInMethods ?: emptyList()
+                if (!methods.contains("password")) {
+                    Toast.makeText(this@LoginActivity, "This account does not use a password", Toast.LENGTH_LONG).show()
+                    return@addOnCompleteListener
                 }
+                auth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this@LoginActivity, "Password reset email sent to $email", Toast.LENGTH_LONG).show()
+                        } else {
+                            val friendly = mapAuthError(task.exception)
+                            Toast.makeText(this@LoginActivity, friendly, Toast.LENGTH_LONG).show()
+                        }
+                    }
             }
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import com.google.firebase.auth.FirebaseAuth
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.BrandsAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.PopularAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.adapters.SliderAdapter
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.databinding.ActivityMainBinding
-import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.CategoryModel
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.model.SliderModel
 import kh.sothun.darachhat.rupp.fe.ecommerce_app.viewModel.MainViewModel
 
@@ -31,15 +29,8 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
 
-    private val brandsAdapter = BrandsAdapter(mutableListOf()) { brand ->
-        selectedBrandId = brand.id
-        applyFilters()
-    }
+    private val brandsAdapter = BrandsAdapter(mutableListOf())
     private val popularAdapter = PopularAdapter(mutableListOf())
-    private var allPopularItems: MutableList<kh.sothun.darachhat.rupp.fe.ecommerce_app.model.ItemModel> = mutableListOf()
-    private var selectedBrandId: String? = null
-    private var selectedCategoryId: String? = null
-    private var isSearching: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +47,6 @@ class DashboardActivity : AppCompatActivity() {
         initBrands()
         initBanners()
         initPopulars()
-        initCategoriesFilter()
         initBottomNavigation()
         initSearchAndOtherElements()
     }
@@ -88,25 +78,33 @@ class DashboardActivity : AppCompatActivity() {
             editTextText.setOnEditorActionListener { v, actionId, event ->
                 val query = v.text.toString()
                 if (query.isNotEmpty()) {
-                    isSearching = true
-                    binding.progressBarPopular.visibility = View.VISIBLE
-                    viewModel.searchProducts(query)
+                    android.widget.Toast.makeText(
+                        this@DashboardActivity,
+                        "Searching for: $query",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    // You can implement actual search functionality here
                 }
                 false
             }
 
-            editTextText.addTextChangedListener { text ->
-                val q = text?.toString()?.trim() ?: ""
-                if (q.isEmpty()) {
-                    isSearching = false
-                    applyFilters()
-                }
+            // Bell icon notification
+            imageView2.setOnClickListener {
+                android.widget.Toast.makeText(
+                    this@DashboardActivity,
+                    "No new notifications",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
-
 
             // "See all" text click
             textView5.setOnClickListener {
-                startActivity(Intent(this@DashboardActivity, ProductsActivity::class.java))
+                android.widget.Toast.makeText(
+                    this@DashboardActivity,
+                    "Showing all items",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                // You can navigate to a full list view here
             }
         }
     }
@@ -150,6 +148,18 @@ class DashboardActivity : AppCompatActivity() {
             }
 
             // Orders button
+            ordersBtn.setOnClickListener {
+                if (auth.currentUser == null) {
+                    android.widget.Toast.makeText(
+                        this@DashboardActivity,
+                        "Please login to view your orders",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                    startActivity(Intent(this@DashboardActivity, LoginActivity::class.java))
+                    return@setOnClickListener
+                }
+                startActivity(Intent(this@DashboardActivity, MyOrdersActivity::class.java))
+            }
 
             // Profile button
             profileBtn.setOnClickListener {
@@ -164,21 +174,8 @@ class DashboardActivity : AppCompatActivity() {
             recyclerViewPopular.adapter=popularAdapter
             progressBarPopular.visibility = View.VISIBLE
             viewModel.popular.observe(this@DashboardActivity){data->
-                allPopularItems = data
-                applyFilters()
-                progressBarPopular.visibility=View.GONE
-            }
-
-            viewModel.filteredProducts.observe(this@DashboardActivity) { data ->
                 popularAdapter.updateData(data)
-                progressBarPopular.visibility = View.GONE
-            }
-
-            viewModel.searchResults.observe(this@DashboardActivity) { data ->
-                if (isSearching) {
-                    popularAdapter.updateData(data)
-                    binding.progressBarPopular.visibility = View.GONE
-                }
+                progressBarPopular.visibility=View.GONE
             }
 
             viewModel.loadPopular()
@@ -198,57 +195,6 @@ class DashboardActivity : AppCompatActivity() {
             }
             viewModel.loadBrands()
         }
-    }
-
-    private fun initCategoriesFilter() {
-        binding.apply {
-            val spinner = spinnerCategory
-            val context = this@DashboardActivity
-            viewModel.categories.observe(context) { list ->
-                val names = list.map { it.title }
-                val ids = list.map { it.id }
-                val adapter = android.widget.ArrayAdapter(context, android.R.layout.simple_spinner_item, names)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
-                spinner.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        selectedCategoryId = ids.getOrNull(position)
-                        applyFilters()
-                    }
-                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) { }
-                }
-            }
-            clearFiltersBtn.setOnClickListener {
-                selectedBrandId = null
-                selectedCategoryId = null
-                applyFilters()
-            }
-            viewModel.loadCategories()
-        }
-    }
-
-    private fun applyFilters() {
-        val brandId = selectedBrandId
-        val categoryId = selectedCategoryId
-
-        if (!brandId.isNullOrEmpty() && !categoryId.isNullOrEmpty()) {
-            binding.progressBarPopular.visibility = View.VISIBLE
-            viewModel.loadProductsByCategoryThenFilterBrand(categoryId, brandId)
-            return
-        }
-        if (!brandId.isNullOrEmpty()) {
-            binding.progressBarPopular.visibility = View.VISIBLE
-            viewModel.loadProductsByBrand(brandId)
-            return
-        }
-        if (!categoryId.isNullOrEmpty()) {
-            binding.progressBarPopular.visibility = View.VISIBLE
-            viewModel.loadProductsByCategory(categoryId)
-            return
-        }
-
-        val filtered = allPopularItems.toMutableList()
-        popularAdapter.updateData(filtered)
     }
 
     private fun initBanners() {
