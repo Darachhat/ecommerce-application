@@ -114,12 +114,7 @@ class DashboardActivity : AppCompatActivity() {
 
             // "See all" text click
             textView5.setOnClickListener {
-                android.widget.Toast.makeText(
-                    this@DashboardActivity,
-                    "Showing all items",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-                // You can navigate to a full list view here
+                startActivity(Intent(this@DashboardActivity, ProductsActivity::class.java))
             }
         }
     }

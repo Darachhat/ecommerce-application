@@ -101,7 +101,7 @@ class CartActivity : AppCompatActivity() {
             totalFeeTxt.text = "$$subtotal"
             taxTxt.text= "$$tax"
             deliveryTxt.text = "$$delivery"
-            totalFeeTxt.text = "$$total"
+            totalTxt.text = "$$total"
         }
     }
 }

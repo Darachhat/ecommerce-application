@@ -18,6 +18,7 @@ class MainRepository {
     private val _popular = MutableLiveData<MutableList<ItemModel>>()
     private val _filteredProducts = MutableLiveData<MutableList<ItemModel>>()
     private val _searchResults = MutableLiveData<MutableList<ItemModel>>()
+    private val _allProducts = MutableLiveData<MutableList<ItemModel>>()
 
 
 
@@ -26,6 +27,7 @@ class MainRepository {
     val popular: LiveData<MutableList<ItemModel>> get()= _popular
     val filteredProducts: LiveData<MutableList<ItemModel>> get() = _filteredProducts
     val searchResults: LiveData<MutableList<ItemModel>> get() = _searchResults
+    val allProducts: LiveData<MutableList<ItemModel>> get() = _allProducts
 
 
     fun loadBrands() {
@@ -148,6 +150,63 @@ class MainRepository {
 
             override fun onCancelled(error: DatabaseError) {
                 android.util.Log.e("MainRepository", "Failed to load popular items: ${error.message}")
+            }
+        })
+    }
+
+    fun loadAllProducts() {
+        val ref = firebaseDatabase.getReference("products")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<ItemModel>()
+                for (child in snapshot.children) {
+                    try {
+                        val title = child.child("title").getValue(String::class.java) ?: ""
+                        val description = child.child("description").getValue(String::class.java) ?: ""
+                        val price = child.child("price").getValue(Double::class.java) ?: 0.0
+                        val oldPrice = child.child("oldPrice").getValue(Double::class.java) ?: 0.0
+                        val thumbnail = child.child("thumbnail").getValue(String::class.java) ?: ""
+                        val active = child.child("active").getValue(Boolean::class.java) ?: true
+                        val rating = child.child("rating").getValue(Double::class.java) ?: 0.0
+                        val brandIdVal = child.child("brandId").getValue(String::class.java) ?: ""
+                        val categoryIdVal = child.child("categoryId").getValue(String::class.java) ?: ""
+
+                        val picUrlList = arrayListOf<String>()
+                        child.child("picUrl").children.forEach { it.getValue(String::class.java)?.let(picUrlList::add) }
+                        if (picUrlList.isEmpty() && thumbnail.isNotEmpty()) picUrlList.add(thumbnail)
+
+                        val sizeList = arrayListOf<String>()
+                        child.child("size").children.forEach { it.getValue(String::class.java)?.let(sizeList::add) }
+
+                        val colorList = arrayListOf<String>()
+                        child.child("color").children.forEach { it.getValue(String::class.java)?.let(colorList::add) }
+
+                        if (active && title.isNotEmpty()) {
+                            list.add(
+                                ItemModel(
+                                    title = title,
+                                    description = description,
+                                    picUrl = picUrlList,
+                                    size = sizeList,
+                                    color = colorList,
+                                    price = price,
+                                    oldPrice = oldPrice,
+                                    rating = rating,
+                                    numberInCart = 1,
+                                    brandId = brandIdVal,
+                                    categoryId = categoryIdVal
+                                )
+                            )
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("MainRepository", "Error parsing all products item: ${e.message}")
+                    }
+                }
+                _allProducts.value = list
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                android.util.Log.e("MainRepository", "Failed to load all products: ${error.message}")
             }
         })
     }
