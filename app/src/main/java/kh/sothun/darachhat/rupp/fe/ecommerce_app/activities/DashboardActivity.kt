@@ -147,19 +147,6 @@ class DashboardActivity : AppCompatActivity() {
                 startActivity(Intent(this@DashboardActivity, FavoriteActivity::class.java))
             }
 
-            // Orders button
-            ordersBtn.setOnClickListener {
-                if (auth.currentUser == null) {
-                    android.widget.Toast.makeText(
-                        this@DashboardActivity,
-                        "Please login to view your orders",
-                        android.widget.Toast.LENGTH_LONG
-                    ).show()
-                    startActivity(Intent(this@DashboardActivity, LoginActivity::class.java))
-                    return@setOnClickListener
-                }
-                startActivity(Intent(this@DashboardActivity, MyOrdersActivity::class.java))
-            }
 
             // Profile button
             profileBtn.setOnClickListener {
