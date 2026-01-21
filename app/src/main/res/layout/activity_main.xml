@@ -265,13 +265,6 @@
             android:padding="18dp"
             app:srcCompat="@drawable/btn_3" />
 
-        <ImageView
-            android:id="@+id/ordersBtn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginHorizontal="8dp"
-            android:padding="18dp"
-            app:srcCompat="@drawable/btn_orders" />
 
         <ImageView
             android:id="@+id/profileBtn"
