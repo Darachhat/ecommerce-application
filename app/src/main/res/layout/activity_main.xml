@@ -109,8 +109,10 @@
                 android:drawablePadding="12dp"
                 android:ems="10"
                 android:hint="@string/what_are_you_looking_for"
+                android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="12sp"
+                android:singleLine="true"
                 android:textColorHint="@color/darkGray"
                 android:textSize="14sp" />
 

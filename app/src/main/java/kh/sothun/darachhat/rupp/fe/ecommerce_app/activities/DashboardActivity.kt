@@ -2,7 +2,9 @@ package kh.sothun.darachhat.rupp.fe.ecommerce_app.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.inputmethod.EditorInfo
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
@@ -76,16 +78,19 @@ class DashboardActivity : AppCompatActivity() {
         binding.apply {
             // Search functionality
             editTextText.setOnEditorActionListener { v, actionId, event ->
-                val query = v.text.toString()
+                // Fire once per enter/search (ignore key down to avoid duplicate toasts)
+                val isEnterUp = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP
+                val isSubmitAction = actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    actionId == EditorInfo.IME_ACTION_DONE ||
+                    isEnterUp
+
+                if (!isSubmitAction) return@setOnEditorActionListener false
+
+                val query = v.text.toString().trim()
                 if (query.isNotEmpty()) {
-                    android.widget.Toast.makeText(
-                        this@DashboardActivity,
-                        "Searching for: $query",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                    // You can implement actual search functionality here
+                    performSearch(query)
                 }
-                false
+                true
             }
 
             // Bell icon notification
@@ -99,12 +104,7 @@ class DashboardActivity : AppCompatActivity() {
 
             // "See all" text click
             textView5.setOnClickListener {
-                android.widget.Toast.makeText(
-                    this@DashboardActivity,
-                    "Showing all items",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-                // You can navigate to a full list view here
+                startActivity(Intent(this@DashboardActivity, ProductsActivity::class.java))
             }
         }
     }
@@ -193,6 +193,12 @@ class DashboardActivity : AppCompatActivity() {
             }
             viewModel.loadBanners()
         }
+    }
+
+    private fun performSearch(query: String) {
+        val intent = Intent(this@DashboardActivity, ProductsActivity::class.java)
+        intent.putExtra(ProductsActivity.EXTRA_SEARCH_QUERY, query)
+        startActivity(intent)
     }
 
     // renamed to 'setupBanners' (lowercase first letter)

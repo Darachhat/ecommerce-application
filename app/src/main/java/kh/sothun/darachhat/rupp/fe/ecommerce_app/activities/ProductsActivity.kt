@@ -31,6 +31,13 @@ class ProductsActivity : AppCompatActivity() {
         binding = ActivityProductsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Pre-fill search if launched with a query
+        intent.getStringExtra(EXTRA_SEARCH_QUERY)?.trim()?.takeIf { it.isNotEmpty() }?.let { initialQuery ->
+            searchQuery = initialQuery
+            binding.searchInput.setText(initialQuery)
+            binding.searchInput.setSelection(initialQuery.length)
+        }
+
         initUI()
     }
 
@@ -142,5 +149,9 @@ class ProductsActivity : AppCompatActivity() {
             else -> result.sortByDescending { it.rating }
         }
         adapter.updateData(result)
+    }
+
+    companion object {
+        const val EXTRA_SEARCH_QUERY = "extra_search_query"
     }
 }

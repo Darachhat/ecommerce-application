@@ -15,7 +15,6 @@ class MainViewModel : ViewModel() {
     val banners: LiveData<List<SliderModel>> = repository.banners
     val categories: LiveData<MutableList<CategoryModel>> = repository.categories
     val filteredProducts: LiveData<MutableList<ItemModel>> = repository.filteredProducts
-    val searchResults: LiveData<MutableList<ItemModel>> = repository.searchResults
     val allProducts: LiveData<MutableList<ItemModel>> = repository.allProducts
 
     val popular: LiveData<MutableList<ItemModel>> = repository.popular
@@ -27,7 +26,6 @@ class MainViewModel : ViewModel() {
     fun loadProductsByBrand(brandId: String) = repository.loadProductsByBrand(brandId)
     fun loadProductsByCategory(categoryId: String) = repository.loadProductsByCategory(categoryId)
     fun loadProductsByCategoryThenFilterBrand(categoryId: String, brandId: String) = repository.loadProductsByCategoryThenFilterBrand(categoryId, brandId)
-    fun searchProducts(query: String) = repository.searchProductsByTitlePrefix(query)
     fun loadAllProducts() = repository.loadAllProducts()
 
 
